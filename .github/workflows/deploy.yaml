@@ -1,0 +1,24 @@
+name: Deploy Nodejs Application
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy Via SSH
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: root
+          key: ${{secrets.SSH_KEY}}
+          script:
+            cd /home/ubuntu/projects/DevopsProjCICD
+            git pull
+            docker compose up -d --build
